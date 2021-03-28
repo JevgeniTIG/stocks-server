@@ -1,0 +1,70 @@
+package com.example.stocks.service;
+
+import com.example.stocks.entity.DatabaseStock;
+import com.example.stocks.entity.HighlightedStock;
+import com.example.stocks.repository.HighlightedStockRepository;
+import com.example.stocks.repository.StockRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import yahoofinance.Stock;
+import yahoofinance.YahooFinance;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class StockService {
+
+	public static final Logger LOG = LoggerFactory.getLogger(StockService.class);
+
+	private final StockRepository stockRepository;
+	private final GetStockWikiDataService getStockWikiDataService;
+
+	@Autowired
+	public StockService(StockRepository stockRepository, GetStockWikiDataService getStockWikiDataService){
+		this.stockRepository = stockRepository;
+		this.getStockWikiDataService = getStockWikiDataService;
+	}
+
+	public DatabaseStock createStock(String ticker) {
+		if (ticker == null) return null;
+
+		Stock yahooFinanceStock;
+
+		try {
+			yahooFinanceStock = YahooFinance.get(ticker);
+			DatabaseStock databaseStock = new DatabaseStock();
+			databaseStock.setTicker(yahooFinanceStock.getSymbol());
+			databaseStock.setCompanyName(yahooFinanceStock.getName());
+			databaseStock.setStockExchange(yahooFinanceStock.getStockExchange());
+			databaseStock.setCurrency(yahooFinanceStock.getCurrency());
+			databaseStock.setMinPrice(YahooFinance.get(ticker).getQuote().getYearLow());
+			databaseStock.setMaxPrice(YahooFinance.get(ticker).getQuote().getYearHigh());
+			databaseStock.setCompanyInfo(getStockWikiDataService.makeSearch(ticker));
+			return stockRepository.save(databaseStock);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			LOG.info("No stock found with ticker: " + ticker);
+		}
+		return null;
+	}
+
+	public void deleteStock(Long id) {
+		stockRepository.deleteById(id);
+	}
+
+	public List<DatabaseStock> getAllStocks() {
+		List<DatabaseStock> availableStocks = new ArrayList<>();
+		try {
+			availableStocks = stockRepository.findAllByOrderByCreatedDateDesc();
+		} catch (Exception ex) {
+			LOG.info("Unexpected exception while loading stocks from database ", ex);
+		}
+		return availableStocks;
+	}
+}
