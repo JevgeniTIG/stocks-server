@@ -111,7 +111,7 @@ public class PriceService {
 			Long currentMinPriceId = availablePrices.stream().min(Comparator.comparing(Price::getPrice)).get().getId();
 
 			final BigDecimal ONE_HUNDRED = new BigDecimal(100);
-			final BigDecimal EIGHTY = new BigDecimal(95);
+			final BigDecimal EIGHTY = new BigDecimal(80);
 			BigDecimal minMultiplyHundred = currentMinPrice.multiply(ONE_HUNDRED);
 			BigDecimal minToMaxInPercent = minMultiplyHundred.divide(currentMaxPrice, 3, RoundingMode.CEILING);
 

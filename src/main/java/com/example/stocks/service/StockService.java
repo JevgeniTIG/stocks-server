@@ -1,8 +1,6 @@
 package com.example.stocks.service;
 
 import com.example.stocks.entity.DatabaseStock;
-import com.example.stocks.entity.HighlightedStock;
-import com.example.stocks.repository.HighlightedStockRepository;
 import com.example.stocks.repository.StockRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +10,6 @@ import yahoofinance.Stock;
 import yahoofinance.YahooFinance;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
