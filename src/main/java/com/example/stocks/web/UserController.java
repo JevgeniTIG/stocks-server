@@ -35,6 +35,7 @@ public class UserController {
 		return new ResponseEntity<>(userDTO, HttpStatus.OK);
 	}
 
+
 	@GetMapping("/{userId}")
 	public ResponseEntity<UserDTO> getUserProfile(@PathVariable("userId") String userId) {
 		User user = userService.getUserById(Long.parseLong(userId));
@@ -42,6 +43,7 @@ public class UserController {
 
 		return new ResponseEntity<>(userDTO, HttpStatus.OK);
 	}
+
 
 	@PostMapping("/update")
 	public ResponseEntity<Object> updateUser(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult, Principal principal) {
@@ -53,4 +55,5 @@ public class UserController {
 
 		return new ResponseEntity<>(userUpdated, HttpStatus.OK);
 	}
+
 }

@@ -20,7 +20,7 @@ public class TestController {
 
 
 	@PostMapping("/test-wiki-data")
-	public String getStockWikiData(@RequestParam(value="ticker") String ticker) throws IOException {
+	public String getStockWikiData(@RequestParam(value="ticker") String ticker) throws Exception {
 		return getStockWikiDataService.makeSearch(ticker);
 	}
 

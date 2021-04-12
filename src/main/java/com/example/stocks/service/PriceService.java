@@ -60,7 +60,6 @@ public class PriceService {
 
 		List<DatabaseStock> availableStocks = getAllStocks();
 
-
 		availableStocks.forEach(stock -> {
 
 			List<Price> availablePrices = getStockListings(stock);
@@ -100,35 +99,37 @@ public class PriceService {
 		List<DatabaseStock> availableStocks = getAllStocks();
 		List<HighlightedStock> highlightedStocks = new ArrayList<>();
 
-		availableStocks.forEach(stock -> {
+		if (!availableStocks.isEmpty()) {
 
-			List<Price> availablePrices = getStockListings(stock);
+			availableStocks.forEach(stock -> {
 
-			BigDecimal currentMaxPrice = availablePrices.stream().max(Comparator.comparing(Price::getPrice)).get().getPrice();
-			Long currentMaxPriceId = availablePrices.stream().max(Comparator.comparing(Price::getPrice)).get().getId();
+				List<Price> availablePrices = getStockListings(stock);
 
-			BigDecimal currentMinPrice = availablePrices.stream().min(Comparator.comparing(Price::getPrice)).get().getPrice();
-			Long currentMinPriceId = availablePrices.stream().min(Comparator.comparing(Price::getPrice)).get().getId();
+				BigDecimal currentMaxPrice = availablePrices.stream().max(Comparator.comparing(Price::getPrice)).get().getPrice();
+				Long currentMaxPriceId = availablePrices.stream().max(Comparator.comparing(Price::getPrice)).get().getId();
 
-			final BigDecimal ONE_HUNDRED = new BigDecimal(100);
-			final BigDecimal EIGHTY = new BigDecimal(80);
-			BigDecimal minMultiplyHundred = currentMinPrice.multiply(ONE_HUNDRED);
-			BigDecimal minToMaxInPercent = minMultiplyHundred.divide(currentMaxPrice, 3, RoundingMode.CEILING);
+				BigDecimal currentMinPrice = availablePrices.stream().min(Comparator.comparing(Price::getPrice)).get().getPrice();
+				Long currentMinPriceId = availablePrices.stream().min(Comparator.comparing(Price::getPrice)).get().getId();
 
-			BigDecimal dropInPercent = ONE_HUNDRED.subtract(minToMaxInPercent);
+				final BigDecimal ONE_HUNDRED = new BigDecimal(100);
+				final BigDecimal EIGHTY = new BigDecimal(80);
+				BigDecimal minMultiplyHundred = currentMinPrice.multiply(ONE_HUNDRED);
+				BigDecimal minToMaxInPercent = minMultiplyHundred.divide(currentMaxPrice, 3, RoundingMode.CEILING);
 
-			if ((minToMaxInPercent.compareTo(EIGHTY) < 0) && (currentMinPriceId > currentMaxPriceId)) {
+				BigDecimal dropInPercent = ONE_HUNDRED.subtract(minToMaxInPercent);
 
-				HighlightedStock highlightedStock = new HighlightedStock();
-				highlightedStock.setTicker(stock.getTicker());
-				highlightedStock.setDropInPercent(dropInPercent);
-				highlightedStocks.add(highlightedStock);
+				if ((minToMaxInPercent.compareTo(EIGHTY) < 0) && (currentMinPriceId > currentMaxPriceId)) {
 
-			}
+					HighlightedStock highlightedStock = new HighlightedStock();
+					highlightedStock.setTicker(stock.getTicker());
+					highlightedStock.setDropInPercent(dropInPercent);
+					highlightedStocks.add(highlightedStock);
+				}
+			});
 
-		});
-		return highlightedStocks;
-
+			return highlightedStocks;
+		}
+		return new ArrayList<>();
 	}
 
 

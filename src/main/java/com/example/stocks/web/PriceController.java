@@ -7,11 +7,13 @@ import com.example.stocks.facade.PriceFacade;
 import com.example.stocks.facade.StockFacade;
 import com.example.stocks.payload.response.MessageResponse;
 import com.example.stocks.service.PriceService;
+import com.example.stocks.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,9 +24,9 @@ public class PriceController {
 	@Autowired
 	private PriceService priceService;
 	@Autowired
-	private PriceFacade priceFacade;
+	private StockService stockService;
 	@Autowired
-	private StockFacade stockFacade;
+	private PriceFacade priceFacade;
 	@Autowired
 	private HighlightedStockFacade highlightedStockFacade;
 
@@ -49,11 +51,14 @@ public class PriceController {
 
 	@GetMapping("/{id}/all")
 	public ResponseEntity<List<PriceDTO>> getStockPrices(@PathVariable("id") Long id) {
-		List<PriceDTO> priceDTOList = priceService.getStockPrices(id)
-				.stream()
-				.map(priceFacade::priceToPriceDTO)
-				.collect(Collectors.toList());
-		return new ResponseEntity<>(priceDTOList, HttpStatus.OK);
+		if (stockService.stockExists(id)) {
+			List<PriceDTO> priceDTOList = priceService.getStockPrices(id)
+					.stream()
+					.map(priceFacade::priceToPriceDTO)
+					.collect(Collectors.toList());
+			return new ResponseEntity<>(priceDTOList, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
 	}
 
 

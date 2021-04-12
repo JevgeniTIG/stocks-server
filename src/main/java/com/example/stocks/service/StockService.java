@@ -51,9 +51,11 @@ public class StockService {
 		return null;
 	}
 
+
 	public void deleteStock(Long id) {
 		stockRepository.deleteById(id);
 	}
+
 
 	public List<DatabaseStock> getAllStocks() {
 		List<DatabaseStock> availableStocks = new ArrayList<>();
@@ -64,4 +66,19 @@ public class StockService {
 		}
 		return availableStocks;
 	}
+
+	public void updateStockInfo(Long id, String companyInfo) {
+
+			DatabaseStock updateStock = stockRepository.findDatabaseStockById(id).get();
+			updateStock.setCompanyInfo(companyInfo);
+
+			stockRepository.save(updateStock);
+
+	}
+
+
+	public boolean stockExists(Long id) {
+		return stockRepository.existsById(id);
+	}
+
 }

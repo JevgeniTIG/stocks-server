@@ -10,9 +10,12 @@ import java.util.Optional;
 @Repository
 public interface StockRepository extends JpaRepository<DatabaseStock, Long> {
 
-	Optional<DatabaseStock> findStockById(Long id);
+	Optional<DatabaseStock> findDatabaseStockById(Long id);
 
 	List<DatabaseStock> findAllByOrderByCreatedDateDesc();
+
+
+
 
 
 }
