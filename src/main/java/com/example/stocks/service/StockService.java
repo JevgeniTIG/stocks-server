@@ -41,7 +41,8 @@ public class StockService {
 			databaseStock.setCurrency(yahooFinanceStock.getCurrency());
 			databaseStock.setMinPrice(YahooFinance.get(ticker).getQuote().getYearLow());
 			databaseStock.setMaxPrice(YahooFinance.get(ticker).getQuote().getYearHigh());
-			databaseStock.setCompanyInfo(getStockWikiDataService.makeSearch(ticker));
+			databaseStock.setCompanyInfo("No info yet");
+//			databaseStock.setCompanyInfo(getStockWikiDataService.makeSearch(ticker));
 			return stockRepository.save(databaseStock);
 
 		} catch (IOException e) {
