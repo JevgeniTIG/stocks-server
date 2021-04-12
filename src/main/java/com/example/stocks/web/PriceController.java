@@ -4,7 +4,6 @@ import com.example.stocks.dto.HighlightedStockDTO;
 import com.example.stocks.dto.PriceDTO;
 import com.example.stocks.facade.HighlightedStockFacade;
 import com.example.stocks.facade.PriceFacade;
-import com.example.stocks.facade.StockFacade;
 import com.example.stocks.payload.response.MessageResponse;
 import com.example.stocks.service.PriceService;
 import com.example.stocks.service.StockService;
