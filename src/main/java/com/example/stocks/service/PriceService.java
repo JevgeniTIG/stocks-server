@@ -5,6 +5,7 @@ import com.example.stocks.entity.HighlightedStock;
 import com.example.stocks.entity.Price;
 import com.example.stocks.repository.PriceRepository;
 import com.example.stocks.repository.StockRepository;
+import javassist.expr.NewArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,27 +104,30 @@ public class PriceService {
 
 			availableStocks.forEach(stock -> {
 
-				List<Price> availablePrices = getStockListings(stock);
+				if (!getStockListings(stock).isEmpty()) {
 
-				BigDecimal currentMaxPrice = availablePrices.stream().max(Comparator.comparing(Price::getPrice)).get().getPrice();
-				Long currentMaxPriceId = availablePrices.stream().max(Comparator.comparing(Price::getPrice)).get().getId();
+					List<Price> availablePrices = getStockListings(stock);
 
-				BigDecimal currentMinPrice = availablePrices.stream().min(Comparator.comparing(Price::getPrice)).get().getPrice();
-				Long currentMinPriceId = availablePrices.stream().min(Comparator.comparing(Price::getPrice)).get().getId();
+					BigDecimal currentMaxPrice = availablePrices.stream().max(Comparator.comparing(Price::getPrice)).get().getPrice();
+					Long currentMaxPriceId = availablePrices.stream().max(Comparator.comparing(Price::getPrice)).get().getId();
 
-				final BigDecimal ONE_HUNDRED = new BigDecimal(100);
-				final BigDecimal EIGHTY = new BigDecimal(80);
-				BigDecimal minMultiplyHundred = currentMinPrice.multiply(ONE_HUNDRED);
-				BigDecimal minToMaxInPercent = minMultiplyHundred.divide(currentMaxPrice, 3, RoundingMode.CEILING);
+					BigDecimal currentMinPrice = availablePrices.stream().min(Comparator.comparing(Price::getPrice)).get().getPrice();
+					Long currentMinPriceId = availablePrices.stream().min(Comparator.comparing(Price::getPrice)).get().getId();
 
-				BigDecimal dropInPercent = ONE_HUNDRED.subtract(minToMaxInPercent);
+					final BigDecimal ONE_HUNDRED = new BigDecimal(100);
+					final BigDecimal EIGHTY = new BigDecimal(80);
+					BigDecimal minMultiplyHundred = currentMinPrice.multiply(ONE_HUNDRED);
+					BigDecimal minToMaxInPercent = minMultiplyHundred.divide(currentMaxPrice, 3, RoundingMode.CEILING);
 
-				if ((minToMaxInPercent.compareTo(EIGHTY) < 0) && (currentMinPriceId > currentMaxPriceId)) {
+					BigDecimal dropInPercent = ONE_HUNDRED.subtract(minToMaxInPercent);
 
-					HighlightedStock highlightedStock = new HighlightedStock();
-					highlightedStock.setTicker(stock.getTicker());
-					highlightedStock.setDropInPercent(dropInPercent);
-					highlightedStocks.add(highlightedStock);
+					if ((minToMaxInPercent.compareTo(EIGHTY) < 0) && (currentMinPriceId > currentMaxPriceId)) {
+
+						HighlightedStock highlightedStock = new HighlightedStock();
+						highlightedStock.setTicker(stock.getTicker());
+						highlightedStock.setDropInPercent(dropInPercent);
+						highlightedStocks.add(highlightedStock);
+					}
 				}
 			});
 

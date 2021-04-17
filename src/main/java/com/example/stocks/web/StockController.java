@@ -1,14 +1,19 @@
 package com.example.stocks.web;
 
 import com.example.stocks.dto.StockDTO;
+import com.example.stocks.entity.DatabaseStock;
 import com.example.stocks.facade.StockFacade;
 import com.example.stocks.payload.response.MessageResponse;
 import com.example.stocks.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,16 +56,15 @@ public class StockController {
 	}
 
 
-	@PostMapping("/update-stock-info/{id}")
-	public ResponseEntity<MessageResponse> updateStockInfo(@PathVariable("id") Long id,
-														   @RequestParam("companyInfo") String companyInfo) {
-		if (stockService.stockExists(id)) {
-			stockService.updateStockInfo(id, companyInfo);
-			return new ResponseEntity<>(new MessageResponse("Stock info updated"), HttpStatus.OK);
-		}
-		return new ResponseEntity<>(new MessageResponse("No stock found with id [" + id + "]" ), HttpStatus.BAD_REQUEST);
+
+	@PostMapping("/{id}/update-stock-info")
+	public ResponseEntity<Object> updateStockInfo(@PathVariable("id") Long id,
+														   @RequestBody StockDTO stockDTO) {
+		DatabaseStock databaseStock = stockService.updateStockInfo(id, stockDTO);
+		StockDTO stockInfoUpdated = stockFacade.databaseStockToStockDTO(databaseStock);
+
+		return new ResponseEntity<>(stockInfoUpdated, HttpStatus.OK);
+
 	}
-
-
 
 }

@@ -37,7 +37,7 @@ public class DatabaseStock {
 	@Column(nullable = false)
 	private BigDecimal maxPrice;
 
-	@Column(nullable = true)
+	@Column(nullable = true, length = 1000)
 	private String companyInfo;
 
 

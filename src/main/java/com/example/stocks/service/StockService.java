@@ -1,5 +1,6 @@
 package com.example.stocks.service;
 
+import com.example.stocks.dto.StockDTO;
 import com.example.stocks.entity.DatabaseStock;
 import com.example.stocks.repository.StockRepository;
 import org.slf4j.Logger;
@@ -22,7 +23,8 @@ public class StockService {
 	private final GetStockWikiDataService getStockWikiDataService;
 
 	@Autowired
-	public StockService(StockRepository stockRepository, GetStockWikiDataService getStockWikiDataService){
+	public StockService(StockRepository stockRepository,
+						GetStockWikiDataService getStockWikiDataService) {
 		this.stockRepository = stockRepository;
 		this.getStockWikiDataService = getStockWikiDataService;
 	}
@@ -68,12 +70,16 @@ public class StockService {
 		return availableStocks;
 	}
 
-	public void updateStockInfo(Long id, String companyInfo) {
+	public DatabaseStock getDatabaseStockById(Long id) {
+		return stockRepository.findDatabaseStockById(id).get();
+	}
 
-			DatabaseStock updateStock = stockRepository.findDatabaseStockById(id).get();
-			updateStock.setCompanyInfo(companyInfo);
+	public DatabaseStock updateStockInfo(Long id, StockDTO stock) {
 
-			stockRepository.save(updateStock);
+		DatabaseStock updateStockInfo = getDatabaseStockById(id);
+		updateStockInfo.setCompanyInfo(stock.getCompanyInfo());
+
+		return stockRepository.save(updateStockInfo);
 
 	}
 
@@ -81,5 +87,6 @@ public class StockService {
 	public boolean stockExists(Long id) {
 		return stockRepository.existsById(id);
 	}
+
 
 }

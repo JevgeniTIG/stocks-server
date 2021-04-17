@@ -15,7 +15,4 @@ public interface StockRepository extends JpaRepository<DatabaseStock, Long> {
 	List<DatabaseStock> findAllByOrderByCreatedDateDesc();
 
 
-
-
-
 }
