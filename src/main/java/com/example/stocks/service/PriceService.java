@@ -5,7 +5,6 @@ import com.example.stocks.entity.HighlightedStock;
 import com.example.stocks.entity.Price;
 import com.example.stocks.repository.PriceRepository;
 import com.example.stocks.repository.StockRepository;
-import javassist.expr.NewArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +24,16 @@ public class PriceService {
 
 	private final StockRepository stockRepository;
 	private final PriceRepository priceRepository;
+	private final MailNotificationService mailNotificationService;
 
 
 	@Autowired
-	public PriceService(StockRepository stockRepository, PriceRepository priceRepository) {
+	public PriceService(StockRepository stockRepository,
+						PriceRepository priceRepository,
+						MailNotificationService mailNotificationService) {
 		this.stockRepository = stockRepository;
 		this.priceRepository = priceRepository;
+		this.mailNotificationService = mailNotificationService;
 
 	}
 

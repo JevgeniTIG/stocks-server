@@ -20,13 +20,10 @@ public class StockService {
 	public static final Logger LOG = LoggerFactory.getLogger(StockService.class);
 
 	private final StockRepository stockRepository;
-	private final GetStockWikiDataService getStockWikiDataService;
 
 	@Autowired
-	public StockService(StockRepository stockRepository,
-						GetStockWikiDataService getStockWikiDataService) {
+	public StockService(StockRepository stockRepository) {
 		this.stockRepository = stockRepository;
-		this.getStockWikiDataService = getStockWikiDataService;
 	}
 
 	public DatabaseStock createStock(String ticker) {
@@ -44,7 +41,6 @@ public class StockService {
 			databaseStock.setMinPrice(YahooFinance.get(ticker).getQuote().getYearLow());
 			databaseStock.setMaxPrice(YahooFinance.get(ticker).getQuote().getYearHigh());
 			databaseStock.setCompanyInfo("No info yet");
-//			databaseStock.setCompanyInfo(getStockWikiDataService.makeSearch(ticker));
 			return stockRepository.save(databaseStock);
 
 		} catch (IOException e) {
