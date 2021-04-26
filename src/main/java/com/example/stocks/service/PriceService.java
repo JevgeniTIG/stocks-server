@@ -24,16 +24,13 @@ public class PriceService {
 
 	private final StockRepository stockRepository;
 	private final PriceRepository priceRepository;
-	private final MailNotificationService mailNotificationService;
 
 
 	@Autowired
 	public PriceService(StockRepository stockRepository,
-						PriceRepository priceRepository,
-						MailNotificationService mailNotificationService) {
+						PriceRepository priceRepository) {
 		this.stockRepository = stockRepository;
 		this.priceRepository = priceRepository;
-		this.mailNotificationService = mailNotificationService;
 
 	}
 
