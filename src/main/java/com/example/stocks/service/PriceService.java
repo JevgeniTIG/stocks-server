@@ -68,7 +68,7 @@ public class PriceService {
 
 			Price stockPrice = new Price();
 
-			if (availablePrices.size() > 60) {
+			if (availablePrices.size() > 59) {
 
 				try {
 					BigDecimal currentPrice = YahooFinance.get(stock.getTicker()).getQuote().getPreviousClose();
@@ -87,7 +87,7 @@ public class PriceService {
 					e.printStackTrace();
 				}
 			}
-			if (availablePrices.size() <= 60) {
+			if (availablePrices.size() <= 59) {
 				try {
 					BigDecimal currentPrice = YahooFinance.get(stock.getTicker()).getQuote().getPreviousClose();
 					stockPrice.setPrice(currentPrice);
