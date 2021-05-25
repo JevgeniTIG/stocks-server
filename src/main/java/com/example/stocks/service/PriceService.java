@@ -17,6 +17,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PriceService {
@@ -74,15 +75,19 @@ public class PriceService {
 					stockPrice.setPrice(currentPrice);
 					stockPrice.setDatabaseStock(stock);
 					priceRepository.save(stockPrice);
-					int smallestId = availablePrices.size() - 1;
-					Long idToDelete = availablePrices.get(smallestId).getId();
-					Price price = priceRepository.findPriceById(idToDelete);
-					priceRepository.delete(price);
+
+					List<Price> allPricesForCurrentStock = getStockListings(stock);
+					Price priceToDelete = allPricesForCurrentStock.stream().findFirst().get();
+
+//					int smallestId = availablePrices.size() - 1;
+//					Long idToDelete = availablePrices.get(smallestId).getId();
+//					Price price = priceRepository.findPriceById(idToDelete);
+					priceRepository.delete(priceToDelete);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
-			if (availablePrices.size() < 60) {
+			if (availablePrices.size() <= 60) {
 				try {
 					BigDecimal currentPrice = YahooFinance.get(stock.getTicker()).getQuote().getPreviousClose();
 					stockPrice.setPrice(currentPrice);

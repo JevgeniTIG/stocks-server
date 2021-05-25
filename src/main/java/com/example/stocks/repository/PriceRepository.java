@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PriceRepository extends JpaRepository<Price, String> {
@@ -15,4 +16,5 @@ public interface PriceRepository extends JpaRepository<Price, String> {
 	Price findPriceById(Long id);
 
 	List<Price> findAllByDatabaseStockIdOrderByCreatedDateAsc(Long id);
+
 }
