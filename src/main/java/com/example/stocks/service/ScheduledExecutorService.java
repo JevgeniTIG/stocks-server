@@ -22,7 +22,7 @@ public class ScheduledExecutorService {
 
 
 
-	@Scheduled(cron = "0 0 6 * * TUE,WED,THU,FRI,SAT")
+	@Scheduled(cron = "0 0 8 * * TUE,WED,THU,FRI,SAT")
 	public void saveStocksPricesAsScheduled(){
 
 		priceService.savePriceDaily();
