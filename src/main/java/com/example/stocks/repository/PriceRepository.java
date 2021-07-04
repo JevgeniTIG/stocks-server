@@ -17,4 +17,5 @@ public interface PriceRepository extends JpaRepository<Price, String> {
 
 	List<Price> findAllByDatabaseStockIdOrderByCreatedDateAsc(Long id);
 
+
 }

@@ -11,6 +11,8 @@ public class HighlightedStockFacade {
 		stockDTO.setId(highlightedStock.getId());
 		stockDTO.setTicker(highlightedStock.getTicker());
 		stockDTO.setDropInPercent(highlightedStock.getDropInPercent());
+		stockDTO.setMinPrice(highlightedStock.getMinPrice());
+		stockDTO.setStatus(highlightedStock.getStatus());
 		stockDTO.setCreatedDate(highlightedStock.getCreatedDate());
 
 

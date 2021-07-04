@@ -3,6 +3,9 @@ package com.example.stocks.service;
 import com.example.stocks.entity.DatabaseStock;
 import com.example.stocks.entity.HighlightedStock;
 import com.example.stocks.entity.Price;
+import com.example.stocks.entity.enums.EvaluationStatus;
+import com.example.stocks.repository.HighlightedStockRepository;
+import com.example.stocks.repository.InvestmentRepository;
 import com.example.stocks.repository.PriceRepository;
 import com.example.stocks.repository.StockRepository;
 import org.slf4j.Logger;
@@ -24,13 +27,19 @@ public class PriceService {
 
 	private final StockRepository stockRepository;
 	private final PriceRepository priceRepository;
+	private final HighlightedStockRepository highlightedStockRepository;
+	private final InvestmentService investmentService;
 
 
 	@Autowired
 	public PriceService(StockRepository stockRepository,
-						PriceRepository priceRepository) {
+						PriceRepository priceRepository,
+						HighlightedStockRepository highlightedStockRepository,
+						InvestmentService investmentService) {
 		this.stockRepository = stockRepository;
 		this.priceRepository = priceRepository;
+		this.highlightedStockRepository = highlightedStockRepository;
+		this.investmentService = investmentService;
 
 	}
 
@@ -130,7 +139,18 @@ public class PriceService {
 						HighlightedStock highlightedStock = new HighlightedStock();
 						highlightedStock.setTicker(stock.getTicker());
 						highlightedStock.setDropInPercent(dropInPercent);
-						highlightedStocks.add(highlightedStock);
+						highlightedStock.setMinPrice(currentMinPrice);
+						highlightedStock.setStatus(EvaluationStatus.ACTIVE);
+						highlightedStockRepository.save(highlightedStock);
+//						highlightedStocks.add(highlightedStock);
+
+						if (investmentService.stockIsPurchased(stock.getTicker())) {
+							LOG.info("This stock {} was already previously purchased", stock.getTicker());
+						} else {
+							investmentService.purchaseStock(stock.getTicker(), currentMinPrice, stock.getCurrency());
+						}
+
+
 					}
 				}
 			});
@@ -150,6 +170,27 @@ public class PriceService {
 		}
 		return availablePrices;
 	}
+
+	public List<HighlightedStock> getAllActiveHighlightedStocks() {
+		List<HighlightedStock> availableStocks = new ArrayList<>();
+		try {
+			availableStocks = highlightedStockRepository.findAllByStatus(EvaluationStatus.ACTIVE);
+		} catch (Exception ex) {
+			LOG.info("Unexpected exception while loading highlightedstocks from database ", ex);
+		}
+		return availableStocks;
+	}
+
+	public void makeOldHighlightedStocksInactive() {
+		List<HighlightedStock> availableStocks = new ArrayList<>();
+		availableStocks = getAllActiveHighlightedStocks();
+		availableStocks.forEach(stock -> {
+			stock.setStatus(EvaluationStatus.INACTIVE);
+			highlightedStockRepository.save(stock);
+		});
+	}
+
+
 
 
 }

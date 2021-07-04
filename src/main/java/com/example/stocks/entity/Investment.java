@@ -1,6 +1,5 @@
 package com.example.stocks.entity;
 
-import com.example.stocks.entity.enums.EvaluationStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -10,7 +9,8 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-public class HighlightedStock {
+public class Investment {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -19,14 +19,10 @@ public class HighlightedStock {
 	private String ticker;
 
 	@Column(nullable = false)
-	private BigDecimal dropInPercent;
+	private BigDecimal purchasePrice;
 
 	@Column(nullable = false)
-	private BigDecimal minPrice;
-
-	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
-	private EvaluationStatus status;
+	private String currency;
 
 	@JsonFormat(pattern = "yyyy-mm-dd HH-mm-ss")
 	@Column(updatable = false)

@@ -37,9 +37,20 @@ public class PriceController {
 	}
 
 
+//	@PostMapping("/evaluate")
+//	public ResponseEntity<List<HighlightedStockDTO>> evaluateStockPrices(){
+//		List<HighlightedStockDTO> highlightedStockDTOList = priceService.evaluateStockPrices()
+//				.stream()
+//				.map(highlightedStockFacade::highlightedStockToHighlightedStockDTO)
+//				.collect(Collectors.toList());
+//
+//		return new ResponseEntity<>(highlightedStockDTOList, HttpStatus.OK);
+//	}
+
+
 	@PostMapping("/evaluate")
 	public ResponseEntity<List<HighlightedStockDTO>> evaluateStockPrices(){
-		List<HighlightedStockDTO> highlightedStockDTOList = priceService.evaluateStockPrices()
+		List<HighlightedStockDTO> highlightedStockDTOList = priceService.getAllActiveHighlightedStocks()
 				.stream()
 				.map(highlightedStockFacade::highlightedStockToHighlightedStockDTO)
 				.collect(Collectors.toList());

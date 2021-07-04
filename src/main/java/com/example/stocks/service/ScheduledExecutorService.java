@@ -26,8 +26,9 @@ public class ScheduledExecutorService {
 	public void saveStocksPricesAsScheduled(){
 
 		priceService.savePriceDaily();
-
+		priceService.makeOldHighlightedStocksInactive();
 		List<HighlightedStock> highlightedStocksList = priceService.evaluateStockPrices();
+
 		if (highlightedStocksList.size() > 0) {
 			mailNotificationService.sendMail();
 		}
