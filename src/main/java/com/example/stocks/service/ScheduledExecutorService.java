@@ -15,15 +15,14 @@ public class ScheduledExecutorService {
 	private MailNotificationService mailNotificationService;
 
 	public ScheduledExecutorService(PriceService priceService,
-									MailNotificationService mailNotificationService){
+									MailNotificationService mailNotificationService) {
 		this.priceService = priceService;
 		this.mailNotificationService = mailNotificationService;
 	}
 
 
-
 	@Scheduled(cron = "0 0 6 * * TUE,WED,THU,FRI,SAT")
-	public void saveStocksPricesAsScheduled(){
+	public void saveStocksPricesAsScheduled() {
 
 		priceService.savePriceDaily();
 		priceService.makeOldHighlightedStocksInactive();
@@ -33,8 +32,6 @@ public class ScheduledExecutorService {
 			mailNotificationService.sendMail();
 		}
 	}
-
-
 
 
 }

@@ -142,14 +142,13 @@ public class PriceService {
 						highlightedStock.setMinPrice(currentMinPrice);
 						highlightedStock.setStatus(EvaluationStatus.ACTIVE);
 						highlightedStockRepository.save(highlightedStock);
-//						highlightedStocks.add(highlightedStock);
+						highlightedStocks.add(highlightedStock);
 
 						if (investmentService.stockIsPurchased(stock.getTicker())) {
 							LOG.info("This stock {} was already previously purchased", stock.getTicker());
 						} else {
 							investmentService.purchaseStock(stock.getTicker(), currentMinPrice, stock.getCurrency());
 						}
-
 
 					}
 				}
@@ -189,8 +188,6 @@ public class PriceService {
 			highlightedStockRepository.save(stock);
 		});
 	}
-
-
 
 
 }
