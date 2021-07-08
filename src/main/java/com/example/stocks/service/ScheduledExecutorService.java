@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -25,12 +26,22 @@ public class ScheduledExecutorService {
 	public void saveStocksPricesAsScheduled() {
 
 		priceService.savePriceDaily();
+		List<HighlightedStock> previousDayHighlightedStocksList = priceService.getAllActiveHighlightedStocks();
+
 		priceService.makeOldHighlightedStocksInactive();
 		List<HighlightedStock> highlightedStocksList = priceService.evaluateStockPrices();
 
-		if (highlightedStocksList.size() > 0) {
-			mailNotificationService.sendMail();
-		}
+		List<String> oldListTickers = new ArrayList<>();
+		previousDayHighlightedStocksList.forEach(highlightedStock-> {
+			oldListTickers.add(highlightedStock.getTicker());
+		});
+
+		highlightedStocksList.forEach(highlightedStock -> {
+			if(!oldListTickers.contains(highlightedStock.getTicker())) {
+				mailNotificationService.sendMail();
+			}
+		});
+
 	}
 
 

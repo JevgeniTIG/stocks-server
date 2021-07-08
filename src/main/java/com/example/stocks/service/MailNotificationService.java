@@ -39,7 +39,7 @@ public class MailNotificationService {
 			message.setRecipients(Message.RecipientType.TO,
 					InternetAddress.parse(to));
 			message.setSubject("Stockradar Notification");
-			message.setText("Please check stockradar website");
+			message.setText("There is a new stock(s) to consider. Please check your account.");
 			Transport.send(message);
 
 
