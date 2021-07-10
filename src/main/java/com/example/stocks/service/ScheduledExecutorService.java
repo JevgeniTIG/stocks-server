@@ -13,11 +13,14 @@ import java.util.List;
 public class ScheduledExecutorService {
 
 	private PriceService priceService;
+	private StockService stockService;
 	private MailNotificationService mailNotificationService;
 
 	public ScheduledExecutorService(PriceService priceService,
+									StockService stockService,
 									MailNotificationService mailNotificationService) {
 		this.priceService = priceService;
+		this.stockService = stockService;
 		this.mailNotificationService = mailNotificationService;
 	}
 
@@ -42,6 +45,12 @@ public class ScheduledExecutorService {
 			}
 		});
 
+	}
+
+	@Scheduled(cron = "0 0 12 L * ?")
+	public void updateStockYearMinAndMaxValues() {
+		stockService.updateStockYearMinAndMaxValues();
+		mailNotificationService.sendMailMinMaxUpdated();
 	}
 
 

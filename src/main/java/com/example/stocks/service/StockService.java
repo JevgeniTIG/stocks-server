@@ -79,9 +79,30 @@ public class StockService {
 
 	}
 
+	public void updateStockYearMinAndMaxValues() {
+
+		List<DatabaseStock> availableStocks = new ArrayList<>();
+		try {
+			availableStocks = stockRepository.findAllByOrderByCreatedDateDesc();
+			for (DatabaseStock stock : availableStocks) {
+				DatabaseStock updateStockMinAndMax = new DatabaseStock();
+				updateStockMinAndMax.setMinPrice(YahooFinance.get(stock.getTicker()).getQuote().getYearLow());
+				updateStockMinAndMax.setMaxPrice(YahooFinance.get(stock.getTicker()).getQuote().getYearHigh());
+				stockRepository.save(updateStockMinAndMax);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			LOG.info("Something went wrong with saving info for stock.");
+		}
+	}
+
 
 	public boolean stockExists(Long id) {
 		return stockRepository.existsById(id);
+	}
+
+	public DatabaseStock getDatabaseStockByTicker(String ticker) {
+		return stockRepository.findDatabaseStockByTicker(ticker);
 	}
 
 

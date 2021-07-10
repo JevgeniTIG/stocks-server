@@ -91,7 +91,7 @@ public class InvestmentService {
 				calculateInvestmentPortfolio(investedAmount, portfolio, portfolioPositions, investment, portfolioPosition, latestPrice, eurUsd, usdEur);
 			} else if (investment.getCurrency().equals("SEK")) {
 				BigDecimal eurSek = BigDecimal.valueOf(10);
-				BigDecimal sekEur = BigDecimal.valueOf(0.099);
+				BigDecimal sekEur = BigDecimal.valueOf(0.098);
 				calculateInvestmentPortfolio(investedAmount, portfolio, portfolioPositions, investment, portfolioPosition, latestPrice, eurSek, sekEur);
 			}
 
