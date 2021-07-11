@@ -35,12 +35,12 @@ public class ScheduledExecutorService {
 		List<HighlightedStock> highlightedStocksList = priceService.evaluateStockPrices();
 
 		List<String> oldListTickers = new ArrayList<>();
-		previousDayHighlightedStocksList.forEach(highlightedStock-> {
+		previousDayHighlightedStocksList.forEach(highlightedStock -> {
 			oldListTickers.add(highlightedStock.getTicker());
 		});
 
 		highlightedStocksList.forEach(highlightedStock -> {
-			if(!oldListTickers.contains(highlightedStock.getTicker())) {
+			if (!oldListTickers.contains(highlightedStock.getTicker())) {
 				mailNotificationService.sendMail();
 			}
 		});
@@ -49,8 +49,13 @@ public class ScheduledExecutorService {
 
 	@Scheduled(cron = "0 0 12 L * ?")
 	public void updateStockYearMinAndMaxValues() {
-		stockService.updateStockYearMinAndMaxValues();
-		mailNotificationService.sendMailMinMaxUpdated();
+		if (stockService.updateStockYearMinAndMaxValues()) {
+			mailNotificationService.sendMailMinMaxUpdated();
+		}
+		else if (!stockService.updateStockYearMinAndMaxValues()) {
+			mailNotificationService.sendMailMinMaxUpdateFailed();
+		}
+
 	}
 
 

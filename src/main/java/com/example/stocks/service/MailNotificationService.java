@@ -85,5 +85,44 @@ public class MailNotificationService {
 			throw new RuntimeException(e);
 		}
 	}
+
+
+	public void sendMailMinMaxUpdateFailed() {
+
+		String to = Conf.MAIL_TO;
+		String from = Conf.MAIL_FROM;
+		final String username = Conf.MAIL_USER;
+		final String password = Conf.MAIL_PASS;
+
+		String host = Conf.MAIL_HOST;
+
+		Properties props = new Properties();
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.host", host);
+		props.put("mail.smtp.port", "587");
+
+		Session session = Session.getInstance(props,
+				new javax.mail.Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(username, password);
+					}
+				});
+
+		try {
+
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(from));
+			message.setRecipients(Message.RecipientType.TO,
+					InternetAddress.parse(to));
+			message.setSubject("Stockradar Monthly Notification");
+			message.setText("Stocks Year Lowest and Highest Values Update Failed.");
+			Transport.send(message);
+
+
+		} catch (MessagingException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
 
