@@ -1,6 +1,7 @@
 package com.example.stocks.web;
 
 import com.example.stocks.dto.HighlightedStockDTO;
+import com.example.stocks.dto.PortfolioPositionMinMaxCurrentDTO;
 import com.example.stocks.dto.PriceDTO;
 import com.example.stocks.facade.HighlightedStockFacade;
 import com.example.stocks.facade.PriceFacade;
@@ -30,26 +31,15 @@ public class PriceController {
 	private HighlightedStockFacade highlightedStockFacade;
 
 	@PostMapping("/save")
-	public ResponseEntity<MessageResponse> savePrices(){
+	public ResponseEntity<MessageResponse> savePrices() {
 		priceService.savePriceDaily();
 
 		return new ResponseEntity<>(new MessageResponse("Price saved"), HttpStatus.OK);
 	}
 
 
-//	@PostMapping("/evaluate")
-//	public ResponseEntity<List<HighlightedStockDTO>> evaluateStockPrices(){
-//		List<HighlightedStockDTO> highlightedStockDTOList = priceService.evaluateStockPrices()
-//				.stream()
-//				.map(highlightedStockFacade::highlightedStockToHighlightedStockDTO)
-//				.collect(Collectors.toList());
-//
-//		return new ResponseEntity<>(highlightedStockDTOList, HttpStatus.OK);
-//	}
-
-
 	@PostMapping("/evaluate")
-	public ResponseEntity<List<HighlightedStockDTO>> evaluateStockPrices(){
+	public ResponseEntity<List<HighlightedStockDTO>> evaluateStockPrices() {
 		List<HighlightedStockDTO> highlightedStockDTOList = priceService.getAllActiveHighlightedStocks()
 				.stream()
 				.map(highlightedStockFacade::highlightedStockToHighlightedStockDTO)
@@ -69,6 +59,12 @@ public class PriceController {
 			return new ResponseEntity<>(priceDTOList, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+	}
+
+	@GetMapping("/minmaxcurrent")
+	public ResponseEntity<List<PortfolioPositionMinMaxCurrentDTO>> getPortfolioAllMinMaxCurrentValues() {
+		List<PortfolioPositionMinMaxCurrentDTO> minMaxCurrentDTOsList = priceService.getPortfolioAllMinMaxCurrentValues();
+		return new ResponseEntity<>(minMaxCurrentDTOsList, HttpStatus.OK);
 	}
 
 

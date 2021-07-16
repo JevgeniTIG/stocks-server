@@ -1,7 +1,7 @@
 package com.example.stocks.web;
 
 
-import com.example.stocks.dto.InvestmentPortfolio;
+import com.example.stocks.dto.InvestmentPortfolioDTO;
 import com.example.stocks.service.InvestmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,8 +17,8 @@ public class InvestmentController {
 	private InvestmentService investmentService;
 
 	@PostMapping("/{amount}/get")
-	public ResponseEntity<InvestmentPortfolio> getInvestorProfile(@PathVariable("amount") Integer investedAmount){
-		InvestmentPortfolio portfolio = investmentService.getPortfolioTotalValue(investedAmount);
+	public ResponseEntity<InvestmentPortfolioDTO> getInvestorProfile(@PathVariable("amount") Integer investedAmount){
+		InvestmentPortfolioDTO portfolio = investmentService.getPortfolioTotalValue(investedAmount);
 
 		return new ResponseEntity<>(portfolio, HttpStatus.OK);
 	}

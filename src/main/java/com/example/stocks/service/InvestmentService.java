@@ -1,7 +1,7 @@
 package com.example.stocks.service;
 
-import com.example.stocks.dto.InvestmentPortfolio;
-import com.example.stocks.dto.PortfolioPosition;
+import com.example.stocks.dto.InvestmentPortfolioDTO;
+import com.example.stocks.dto.PortfolioPositionDTO;
 import com.example.stocks.entity.Investment;
 import com.example.stocks.repository.InvestmentRepository;
 import com.example.stocks.repository.PriceRepository;
@@ -47,17 +47,17 @@ public class InvestmentService {
 	}
 
 
-	public InvestmentPortfolio getPortfolioTotalValue(Integer investedAmount) {
-		InvestmentPortfolio portfolio = new InvestmentPortfolio();
+	public InvestmentPortfolioDTO getPortfolioTotalValue(Integer investedAmount) {
+		InvestmentPortfolioDTO portfolio = new InvestmentPortfolioDTO();
 
-		List<PortfolioPosition> portfolioPositions = new ArrayList<>();
+		List<PortfolioPositionDTO> portfolioPositions = new ArrayList<>();
 		portfolio.setTotalValue(BigDecimal.ZERO);
 		portfolio.setTotalProfitability(BigDecimal.ZERO);
 		portfolio.setInitialInvestmentAmountTotal(BigDecimal.ZERO);
 
 		getAllInvestments().forEach(investment -> {
 
-			PortfolioPosition portfolioPosition = new PortfolioPosition();
+			PortfolioPositionDTO portfolioPosition = new PortfolioPositionDTO();
 
 			Long stockId = stockRepository.findDatabaseStockByTicker(investment.getTicker()).getId();
 			int index = priceRepository.findAllByDatabaseStockIdOrderByCreatedDateAsc(stockId).size();
@@ -100,7 +100,7 @@ public class InvestmentService {
 		return portfolio;
 	}
 
-	public void calculateInvestmentPortfolio(Integer investedAmount, InvestmentPortfolio portfolio, List<PortfolioPosition> portfolioPositions, Investment investment, PortfolioPosition portfolioPosition, BigDecimal latestPrice, BigDecimal eurSek, BigDecimal sekEur) {
+	public void calculateInvestmentPortfolio(Integer investedAmount, InvestmentPortfolioDTO portfolio, List<PortfolioPositionDTO> portfolioPositions, Investment investment, PortfolioPositionDTO portfolioPosition, BigDecimal latestPrice, BigDecimal eurSek, BigDecimal sekEur) {
 		BigDecimal currentValue;
 		currentValue = BigDecimal.valueOf(investedAmount).multiply(eurSek).divide(investment.getPurchasePrice(), 2, RoundingMode.FLOOR).multiply(latestPrice).multiply(sekEur);
 		portfolio.setTotalValue(portfolio.getTotalValue().add(currentValue));
