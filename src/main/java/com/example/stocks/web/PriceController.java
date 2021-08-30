@@ -1,7 +1,7 @@
 package com.example.stocks.web;
 
 import com.example.stocks.dto.HighlightedStockDTO;
-import com.example.stocks.dto.PortfolioPositionMinMaxCurrentDTO;
+import com.example.stocks.dto.PortfolioPositionMinMaxCurrentPurchasePriceDTO;
 import com.example.stocks.dto.PriceDTO;
 import com.example.stocks.facade.HighlightedStockFacade;
 import com.example.stocks.facade.PriceFacade;
@@ -61,9 +61,9 @@ public class PriceController {
 		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
 	}
 
-	@GetMapping("/minmaxcurrent")
-	public ResponseEntity<List<PortfolioPositionMinMaxCurrentDTO>> getPortfolioAllMinMaxCurrentValues() {
-		List<PortfolioPositionMinMaxCurrentDTO> minMaxCurrentDTOsList = priceService.getPortfolioAllMinMaxCurrentValues();
+	@GetMapping("/minmaxcurrentpurchase")
+	public ResponseEntity<List<PortfolioPositionMinMaxCurrentPurchasePriceDTO>> getPortfolioAllMinMaxCurrentValues() {
+		List<PortfolioPositionMinMaxCurrentPurchasePriceDTO> minMaxCurrentDTOsList = priceService.getPortfolioAllMinMaxCurrentValues();
 		return new ResponseEntity<>(minMaxCurrentDTOsList, HttpStatus.OK);
 	}
 

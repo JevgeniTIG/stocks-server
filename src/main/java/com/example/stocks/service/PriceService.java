@@ -1,13 +1,12 @@
 package com.example.stocks.service;
 
-import com.example.stocks.dto.PortfolioPositionMinMaxCurrentDTO;
+import com.example.stocks.dto.PortfolioPositionMinMaxCurrentPurchasePriceDTO;
 import com.example.stocks.entity.DatabaseStock;
 import com.example.stocks.entity.HighlightedStock;
 import com.example.stocks.entity.Investment;
 import com.example.stocks.entity.Price;
 import com.example.stocks.entity.enums.EvaluationStatus;
 import com.example.stocks.repository.HighlightedStockRepository;
-import com.example.stocks.repository.InvestmentRepository;
 import com.example.stocks.repository.PriceRepository;
 import com.example.stocks.repository.StockRepository;
 import org.slf4j.Logger;
@@ -20,7 +19,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -192,20 +190,21 @@ public class PriceService {
 		});
 	}
 
-	public List<PortfolioPositionMinMaxCurrentDTO> getPortfolioAllMinMaxCurrentValues() {
+	public List<PortfolioPositionMinMaxCurrentPurchasePriceDTO> getPortfolioAllMinMaxCurrentValues() {
 
-		List <PortfolioPositionMinMaxCurrentDTO> minMaxCurrentDTOsList = new ArrayList<>();
+		List <PortfolioPositionMinMaxCurrentPurchasePriceDTO> minMaxCurrentDTOsList = new ArrayList<>();
 
 		List<Investment> availableInvestments = investmentService.getAllInvestments();
 		availableInvestments.forEach(investment -> {
-			PortfolioPositionMinMaxCurrentDTO minMaxCurrentDTO = new PortfolioPositionMinMaxCurrentDTO();
+			PortfolioPositionMinMaxCurrentPurchasePriceDTO minMaxCurrentPurchasePriceDTO = new PortfolioPositionMinMaxCurrentPurchasePriceDTO();
 			DatabaseStock databaseStock = stockRepository.findDatabaseStockByTicker(investment.getTicker());
-			minMaxCurrentDTO.setTicker(databaseStock.getTicker());
-			minMaxCurrentDTO.setMinPrice(databaseStock.getMinPrice());
-			minMaxCurrentDTO.setMaxPrice(databaseStock.getMaxPrice());
+			minMaxCurrentPurchasePriceDTO.setTicker(databaseStock.getTicker());
+			minMaxCurrentPurchasePriceDTO.setMinPrice(databaseStock.getMinPrice());
+			minMaxCurrentPurchasePriceDTO.setMaxPrice(databaseStock.getMaxPrice());
+			minMaxCurrentPurchasePriceDTO.setPurchasePrice(investment.getPurchasePrice());
 			List<Price> pricesList = priceRepository.findAllByDatabaseStockIdOrderByCreatedDateAsc(databaseStock.getId());
-			minMaxCurrentDTO.setCurrentValue(pricesList.get(pricesList.size() - 1).getPrice());
-			minMaxCurrentDTOsList.add(minMaxCurrentDTO);
+			minMaxCurrentPurchasePriceDTO.setCurrentValue(pricesList.get(pricesList.size() - 1).getPrice());
+			minMaxCurrentDTOsList.add(minMaxCurrentPurchasePriceDTO);
 		});
 		return minMaxCurrentDTOsList;
 

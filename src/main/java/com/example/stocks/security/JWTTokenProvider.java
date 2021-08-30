@@ -4,6 +4,7 @@ import com.example.stocks.entity.User;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,9 @@ import java.util.Map;
 @Component
 public class JWTTokenProvider {
 	public static final Logger LOG = LoggerFactory.getLogger(JWTTokenProvider.class);
+
+	@Value("${jwt.secret}")
+	private String jwtSecret;
 
 	public String generateToken(Authentication authentication){
 		User user = (User) authentication.getPrincipal();
@@ -33,7 +37,7 @@ public class JWTTokenProvider {
 				.addClaims(claimsMap)
 				.setIssuedAt(now)
 				.setExpiration(expiryDate)
-				.signWith(SignatureAlgorithm.HS512, SecurityConstants.SECRET)
+				.signWith(SignatureAlgorithm.HS512, jwtSecret)
 				.compact();
 
 	}
@@ -41,7 +45,7 @@ public class JWTTokenProvider {
 	public boolean validateToken(String token){
 		try {
 			Jwts.parser()
-					.setSigningKey(SecurityConstants.SECRET)
+					.setSigningKey(jwtSecret)
 					.parseClaimsJws(token);
 			return true;
 		} catch (SignatureException |
@@ -57,7 +61,7 @@ public class JWTTokenProvider {
 
 	public Long getUserIdFromToken(String token) {
 		Claims claims = Jwts.parser()
-				.setSigningKey(SecurityConstants.SECRET)
+				.setSigningKey(jwtSecret)
 				.parseClaimsJws(token)
 				.getBody();
 
